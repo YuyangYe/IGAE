@@ -1,8 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from HetGCN_layer import HetGCN
-from Transfomer_layer import SelfAttention
+from hetgcn_layer import HetGCN
+from transfomer_layer import SelfAttention
 
 '''
 Encoder is a stack of ST_Block, each ST_Block contains a sequence of HetGCN layer and a self-attention layer
@@ -43,14 +43,14 @@ class ST_Block(nn.Module):
     def forward(self, adj_uu_seq, adj_uc_seq, adj_cc, X_U, X_C):
         node_embed_u_seq = []
         node_embed_c_seq = []
-        for i in range(self.seq_len):
+        for i in range(1, self.seq_len):
             node_embed_u, node_embed_c, _, _ = self.hetgcns[i](adj_uu_seq[i], adj_uc_seq[i], adj_cc, X_U, X_C)
             node_embed_u_seq.append(node_embed_u)
             node_embed_c_seq.append(node_embed_c)
         node_embed_u_seq = torch.stack(node_embed_u_seq, dim=1)
         node_embed_c_seq = torch.stack(node_embed_c_seq, dim=1)
-        node_embed_u  = self.attention(node_embed_c_seq)
-        node_embed_c  = self.attention(node_embed_u_seq)
+        node_embed_u = self.attention(node_embed_c_seq)
+        node_embed_c = self.attention(node_embed_u_seq)
         return node_embed_u, node_embed_c
 
 class MLP_layer(nn.Module):
