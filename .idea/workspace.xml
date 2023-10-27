@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="021d5d6d-189c-46b5-898b-5e9c57b53e64" name="Changes" comment="" />
+    <list default="true" id="021d5d6d-189c-46b5-898b-5e9c57b53e64" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/IGAE/evaluate.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/education_experience" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/profile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/project" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/readme.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/skills" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/url_company" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/linkedin_demo/work_experience" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/company_list.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/filter_uid_by_edu.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/get_pair_company.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/get_pair_university.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/sample_work.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/university_list.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/preprocessing/unpack_pickle_add_work.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/IGAE.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IGAE.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IGAE/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/IGAE/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/data/GoogleNw.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/data/GoogleNw.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/data/citeseer.cites" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/data/citeseer.cites" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/data/cora.cites" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/data/cora.cites" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/graph_visu_cora.png" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/graph_visu_cora.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/evaluation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/initializations.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/initializations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/input_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/input_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/layers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/layers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/optimizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/optimizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/preprocessing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/preprocessing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/gravity_gae/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/gravity_gae/train.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gravity_graph_autoencoders-master/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Gravity/setup.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,6 +49,9 @@
         <option value="Python Script" />
       </list>
     </option>
+  </component>
+  <component name="Git.Rebase.Settings">
+    <option name="NEW_BASE" value="main" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -27,7 +66,18 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/IGAE/preprocessing" />
+      <recent name="$PROJECT_DIR$/.." />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RunManager" selected="Python.test2">
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
@@ -92,12 +142,25 @@
       <workItem from="1694316107703" duration="165000" />
       <workItem from="1694316286005" duration="9980000" />
       <workItem from="1697051836060" duration="11976000" />
-      <workItem from="1698302420509" duration="1785000" />
+      <workItem from="1698302420509" duration="2747000" />
+      <workItem from="1698367921836" duration="2069000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/IGAE$test2.coverage" NAME="test2 Coverage Results" MODIFIED="1697667445421" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/IGAE" />

@@ -1,0 +1,41 @@
+apple
+microsoft
+alphabet
+google
+at&t
+amazon
+verizon
+china mobile
+walt
+meta
+facebook
+intel
+ibm
+cisco
+oracle
+dell
+broadcom
+mircon
+qualcomm
+paypal
+hp
+automatic data processing
+booking
+texas
+netflix
+salesforce
+applied materials
+adobe
+vmware
+cognizant
+nvidia
+ebay
+corning
+fidelity
+blizzard
+analog
+lam
+dxc
+fortive
+fiserv
+hewlett
