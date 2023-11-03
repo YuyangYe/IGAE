@@ -6,10 +6,9 @@ import torch.nn.functional as F
 
 
 class Decoder(nn.Module):
-    def __init__(self, device, weight_norm=True, link_norm=True, lambda_weight=1, lambda_link=1):
+    def __init__(self, weight_norm=True, link_norm=True, lambda_weight=1, lambda_link=1):
 
         super(Decoder, self).__init__()
-        self.device = device
         self.weight_norm = weight_norm
         self.link_norm = link_norm
         self.lambda_weight = lambda_weight

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
+import torch.nn.functional as F
 
 def positional_encoding(position, d_model):
     angle_rads = get_angles(
@@ -25,9 +26,9 @@ def get_angles(pos, i, d_model):
     return pos * angle_rates
 
 
-class SelfAttention(nn.Module):
+class Dual_SelfAttention(nn.Module):
     def __init__(self, input_size, embed_size, heads):
-        super(SelfAttention, self).__init__()
+        super(Dual_SelfAttention, self).__init__()
         self.embed_size = embed_size
         self.input_size = input_size
         self.heads = heads
@@ -41,14 +42,21 @@ class SelfAttention(nn.Module):
         self.values = nn.ModuleList([nn.Linear(self.head_input_size, self.head_dim, bias=False) for _ in range(heads)])
         self.keys = nn.ModuleList([nn.Linear(self.head_input_size, self.head_dim, bias=False) for _ in range(heads)])
         self.queries = nn.ModuleList([nn.Linear(self.head_input_size, self.head_dim, bias=False) for _ in range(heads)])
+        self.queries_u = nn.ModuleList([nn.Linear(self.head_input_size, self.head_dim, bias=False) for _ in range(heads)])
 
         self.fc_out = nn.Linear(heads * self.head_dim, embed_size)
         self.layer_norm = nn.LayerNorm(embed_size)
 
+        self.W_d = nn.Parameter(torch.randn(self.head_dim, 2 * self.head_dim))
+        self.h = nn.Parameter(torch.randn(self.head_dim, 1))
+        nn.init.xavier_uniform_(self.W_d)
+        nn.init.xavier_uniform_(self.h)
+
         self.positional_encoding = positional_encoding(1000, input_size * 2)  # Assuming a maximum sequence length of 1000
 
-    def forward(self, inputs, mask=None):
+    def forward(self, inputs, inputs2, mask=None):                  #inputs is Y, inputs2 is Y_u
         values = inputs, keys = inputs, queries = inputs
+        queries_u = inputs2
         N = queries.shape[0]
         value_len, key_len, query_len = values.shape[1], keys.shape[1], queries.shape[1]
 
@@ -57,32 +65,54 @@ class SelfAttention(nn.Module):
         values = values + self.positional_encoding[:, :value_len, :]
         keys = keys + self.positional_encoding[:, :key_len, :]
         queries = queries + self.positional_encoding[:, :query_len, :]
+        queries_u = queries_u + self.positional_encoding[:, :query_len, :]
 
         values = values.reshape(N, value_len, self.heads, self.head_input_size)
         keys = keys.reshape(N, key_len, self.heads, self.head_input_size)
         queries = queries.reshape(N, query_len, self.heads, self.head_input_size)
+        queries_u = queries_u.reshape(N, query_len, self.heads, self.head_input_size)
 
-        energy = 0
+        energy1 = 0
+        energy2 = 0
 
         head_outputs = []
         last_attention = []
 
         for i in range(self.heads):
-            energy += torch.einsum("nqhd,nkhd->nhqk", [self.queries[i](queries[:, :, i, :]).reshape(N, query_len, 1, -1), self.keys[i](keys[:, :, i, :]).reshape(N, key_len, 1, -1)])
+            energy1 += torch.einsum("nqhd,nkhd->nhqk", [self.queries[i](queries[:, :, i, :]).reshape(N, query_len, 1, -1), self.keys[i](keys[:, :, i, :]).reshape(N, key_len, 1, -1)])
+            energy2 += torch.einsum("nqhd,nkhd->nhqk", [self.queries_u[i](queries_u[:, :, i, :]).reshape(N, query_len, 1, -1), self.keys[i](keys[:, :, i, :]).reshape(N, key_len, 1, -1)])
 
-            energy /= self.heads
+            energy1 /= self.heads
+            energy2 /= self.heads
 
             if mask is None:
                 # Create the lower triangular mask to mask out positions j > i
                 mask = torch.tril(torch.ones((query_len, key_len))).to(values.device)
 
-            energy = energy.masked_fill(mask == 0, float("-1e20"))
+            energy1 = energy1.masked_fill(mask == 0, float("-1e20"))
+            energy2 = energy2.masked_fill(mask == 0, float("-1e20"))
 
-            attention = torch.nn.functional.softmax(energy, dim=3)
-            last_token_attentions = attention[:, :, -1, :].squeeze()
-            last_attention.append(last_token_attentions)
+            attention1 = torch.nn.functional.softmax(energy1, dim=3)
+            attention2 = torch.nn.functional.softmax(energy2, dim=3)
 
-            out = torch.einsum("nhql,nlhd->nhqd", [attention, self.values[i](values[:, :, i, :]).reshape(N, value_len, 1, -1)]).reshape(N, query_len, self.head_dim)
+            out1 = torch.einsum("nhql,nlhd->nhqd", [attention1, self.values[i](values[:, :, i, :]).reshape(N, value_len, 1, -1)]).reshape(N, query_len, self.head_dim)
+            out2 = torch.einsum("nhql,nlhd->nhqd", [attention2, self.values[i](values[:, :, i, :]).reshape(N, value_len, 1, -1)]).reshape(N, query_len, self.head_dim)
+
+            #attention mechanism to combine the two outputs
+            concat1 = torch.cat((out1, inputs), dim=2)
+            concat2 = torch.cat((out2, inputs), dim=2)
+
+            E_c = torch.matmul(F.relu(torch.matmul(concat1, self.W_d.T)), self.h)
+            E_u = torch.matmul(F.relu(torch.matmul(concat1, self.W_d.T)), self.h)
+
+            #Compute attention coefficient A_i for all timesteps T
+            numerator = torch.exp(E_c)
+            denominator = torch.exp(E_c) + torch.exp(E_u)
+
+            A = numerator / denominator       #dim(A) = (N, query_len, 1)
+            A.expand_as(out1)
+            out = A * out1 + (1 - A) * out2
+
             head_outputs.append(out)
 
         out = torch.cat(head_outputs, dim=2)

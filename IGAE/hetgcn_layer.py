@@ -17,10 +17,10 @@ class HetGCN(nn.Module):
         self.W = torch.nn.Linear(input_dim + output_dim, output_dim, bias=False)
         self.a = torch.nn.Parameter(torch.FloatTensor(output_dim, 1))
 
-    def forward(self, X_U, X_C, adj_uu, adj_uc, adj_cc):
-        node_embed_u = self.gcn_same(adj_uu, X_U)
-        node_embed_c1 = self.gcn_same(adj_cc, X_C)
-        node_embed_c2 = self.gcn_cross(adj_uc, X_U, X_C)
+    def forward(self, X_U, X_C, w_uu, w_uc, w_cc):
+        node_embed_u = self.gcn_same(w_uu, X_U)
+        node_embed_c1 = self.gcn_same(w_cc, X_C)
+        node_embed_c2 = self.gcn_cross(w_uc, X_U, X_C)
 
         c_concat_1 = torch.cat((node_embed_c1, X_C), dim=-1)
         a_input_1 = self.W(c_concat_1)
@@ -53,16 +53,16 @@ class GCN_S(torch.nn.Module):
 
         return nn.Parameter(initial)
 
-    def forward(self, weighted_adjacency_matrix, feature_matrix):
+    def forward(self, weighted_matrix, feature_matrix):
         # Calculate the normalization factor
-        degree_matrix_inv_sqrt = torch.diag_embed(torch.pow(1 + torch.sum(weighted_adjacency_matrix, dim=1), -0.5))
+        degree_matrix_inv_sqrt = torch.diag_embed(torch.pow(1 + torch.sum(weighted_matrix, dim=1), -0.5))
 
         # Applying the normalization factor to the edge weights
-        norm_adjacency_matrix = torch.matmul(torch.matmul(degree_matrix_inv_sqrt, weighted_adjacency_matrix), degree_matrix_inv_sqrt)
+        norm_weighted_matrix = torch.matmul(torch.matmul(degree_matrix_inv_sqrt, weighted_matrix), degree_matrix_inv_sqrt)
 
         # Perform the GCN operation
         support = torch.matmul(feature_matrix, self.weight)
-        output = torch.matmul(norm_adjacency_matrix, support)
+        output = torch.matmul(norm_weighted_matrix, support)
 
         return output
 
@@ -85,21 +85,20 @@ class GCN_C(torch.nn.Module):
 
         return nn.Parameter(initial)
 
-    def forward(self, adjacency_matrix, feature_matrix_u, feature_matrix_c):
+    def forward(self, weight_matrix, feature_matrix_u, feature_matrix_c):
         # Project the features of U and C into the same latent space
         projected_u = torch.matmul(feature_matrix_u, self.projection_u)
         projected_c = torch.matmul(feature_matrix_c, self.projection_c)
 
         # Calculate the normalization factor
-        degree_matrix_u_inv_sqrt = torch.diag_embed(torch.pow(torch.sum(adjacency_matrix, dim=1), -0.5))
-        degree_matrix_c_inv_sqrt = torch.diag_embed(torch.pow(torch.sum(adjacency_matrix, dim=0), -0.5))
+        degree_matrix_u_inv_sqrt = torch.diag_embed(torch.pow(torch.sum(weight_matrix, dim=1), -0.5))
+        degree_matrix_c_inv_sqrt = torch.diag_embed(torch.pow(torch.sum(weight_matrix, dim=0), -0.5))
 
-        # Applying the normalization factor to the adjacency matrix
-        norm_adjacency_matrix = torch.matmul(torch.matmul(degree_matrix_u_inv_sqrt, adjacency_matrix),degree_matrix_c_inv_sqrt)
+        norm_weight_matrix = torch.matmul(torch.matmul(degree_matrix_u_inv_sqrt, weight_matrix),degree_matrix_c_inv_sqrt)
 
         # Perform the GCN operation
         support = torch.matmul(projected_u, self.weight)
-        output_c = torch.matmul(norm_adjacency_matrix, support)
+        output_c = torch.matmul(norm_weight_matrix, support)
 
         return output_c
 
